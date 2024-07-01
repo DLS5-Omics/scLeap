@@ -1,9 +1,0 @@
-numpy
-click
-tqdm
-tabulate
-pandas
-tensorboard
-scipy
-scanpy
-lmdb
