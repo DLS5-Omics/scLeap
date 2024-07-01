@@ -1,0 +1,30 @@
+target:
+  service: amlk8s
+  vc: resrchvc
+  name: itpscusv100cl
+
+environment:
+  image: nvidia/pytorch:23.03-py3
+  registry: nvcr.io
+  setup:
+    - pip install -U -r requirements.txt
+    - bash scripts/download_dataset.sh
+
+code:
+  # local directory of the code. this will be uploaded to the server.
+  local_dir: $CONFIG_DIR
+
+storage:
+  my_output:
+    storage_account_name: fusong4x
+    container_name: experiments
+    mount_dir: /blob/fusong4x/experiments
+
+jobs:
+- name: train
+  sku: G8-V100
+  process_count_per_node: 8
+  command:
+    - bash scripts/launch_train.sh
+  submit_args:
+    max_attempts: 1
