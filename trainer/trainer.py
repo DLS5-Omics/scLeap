@@ -30,7 +30,6 @@ class Trainer:
         if world_rank == 0:
             self.logger = cfg.train_logger
             self.logger.info(str(self.model))
-            # self.writer = SummaryWriter(cfg.log_dir)
         self.model = DDP(self.model, device_ids=[self.local_rank])
 
         trainable_params = filter(lambda p: p.requires_grad, self.model.parameters())
@@ -117,18 +116,9 @@ class Trainer:
             if self.world_rank == 0:
                 if i % 10 == 0:
                     self.logger.info(log_str)
-                    # for k, v in b_losses.items():
-                    #     self.writer.add_scalar(k, (sum(v) / len(v)), self.step)
-                    # for k, v in b_metrics.items():
-                    #     self.writer.add_scalar(k, (sum(v) / len(v)), self.step)
 
             if i % 10 == 0:
                 print(log_str)
-            if i % 5000 == 0 and self.world_rank == 0:
-                print(f"==========Start validation at step {i}==========")
-                self.model.eval()
-                self._validate_fn(self.model, self.vp)
-                print("==========End validation===========")
 
 
             cur_time = time.time()
@@ -139,37 +129,6 @@ class Trainer:
                 self.save_checkpoint()
                 last_saved_time = cur_time
                 
-    def _validate_fn(self, model, data_loader):
-        b_losses, b_metrics = defaultdict(list), defaultdict(list)
-        data_list, out_list = [], []
-        for i, data in enumerate(data_loader):
-            if torch.cuda.is_available():
-                data = {k: v.cuda() for k, v in data.items()}
-            with torch.no_grad():
-                output = model(data)
-                losses = {k: v for k, v in output.items() if k.endswith("loss")}
-                metrics = {
-                    k: v
-                    for k, v in output.items()
-                    if k.endswith("_acc") or k.startswith("token")
-                }
-            data_list.append(data["perturb"].item())
-            _, pred = output["pred"].topk(1, 1, True, True)
-            out_list.append(pred.item())
-            for k, v in losses.items():
-                b_losses[k].append(v.item())
-            for k, v in metrics.items():
-                b_metrics[k].append(v)
-
-        loss_str = ", ".join(
-            ["%s: %.6f" % (k, sum(v) / len(v)) for k, v in b_losses.items()]
-        )
-        metric_str = ", ".join(
-            ["%s: %.6f" % (k, sum(v) / len(v)) for k, v in b_metrics.items()]
-        )
-        f1 = f1_score(data_list, out_list, average='weighted')
-        log_str = f"{loss_str}, {metric_str}"
-        print(log_str, "| f1 score:", f1)
                 
 
     def save_checkpoint(self):

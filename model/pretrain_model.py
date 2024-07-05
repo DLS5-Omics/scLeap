@@ -143,13 +143,3 @@ class PretrainModel(BaseModel):
 
     def _compute_metric(self, out, data):
         return {}
-        # with torch.no_grad():
-        #     metrics = {}
-        #     bs = out["nonzero_pred"].shape[0]
-        #     nonzero_prob = torch.softmax(out["nonzero_pred"], dim=-1)[..., 1]
-        #     nonzero_prob = nonzero_prob.reshape(-1)
-        #     label = data["nonzero"].reshape(-1)
-        #     metrics["token"] = (label > 0).sum() / bs
-        #     order = torch.argsort(-nonzero_prob)
-        #     metrics["top_acc_10"] = (label[order[: 10 * bs]] == 1).float().mean()
-        #     return metrics

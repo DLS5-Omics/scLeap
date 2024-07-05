@@ -61,7 +61,8 @@ class H5ADReader:
         for k in path_list:
             self.data[k] = {}
             hca_temp = sc.read_h5ad(k)
-            hca = hca_temp[:, hca_temp.var_names.isin(gene_list)][:, gene_list]
+            hca_temp = hca_temp[:, hca_temp.var_names.isin(gene_list)][:, gene_list]
+            hca = hca_temp.copy()
             hca.obs["index"] = range(len(hca.obs))
             self.data[k]["hca"] = hca
             self.data[k]["perturb_rows"] = hca.obs.loc[
@@ -116,7 +117,7 @@ class HCADataset(Dataset):
         self.weights = self.weights / self.weights.sum()
         self.perturb_all = self.reader.data[self.hca[0]]['hca'].obs.perturbation
         self.gene2token = {}
-        for i, x in enumerate(open(cfg.dataset_dir / "gene_name.txt")):
+        for i, x in enumerate(open(cfg.pretrain_model_dir / "gene_name.txt")):
             self.gene2token[x.strip()] = i
 
         for k in range(len(self.hca)):
@@ -242,13 +243,13 @@ class HCADataset(Dataset):
 class TrainDataset(Dataset):
     def __init__(self):
         ds = HCADataset(
-            [os.path.join(cfg.dataset_dir, "HuTcellsCRISPRaPerturbSeqAllGene_Re-stimulated_with_metadata.h5ad")]
+            [os.path.join(cfg.dataset_dir, "set3_example_train.h5ad")]
         )
         self._dataset = ds
         
-        mtx2 = pd.read_csv(os.path.join(cfg.dataset_dir, "integrated_network_setting3_all_genes.csv"),header=0, index_col=0)
-        self._in_degree = mtx2.sum(axis=0)
-        self._out_degree = mtx2.sum(axis=1)
+        mtx = pd.read_csv(os.path.join(cfg.dataset_dir, "integrated_network_setting3_all_genes.csv"),header=0, index_col=0)
+        self._in_degree = mtx.sum(axis=0)
+        self._out_degree = mtx.sum(axis=1)
 
     def __getitem__(self, index):
         data = self._dataset[index]
@@ -267,16 +268,16 @@ class TrainDataset(Dataset):
 class ValidationDataset(Dataset):
     def __init__(self):
         ds = HCADataset(
-            [os.path.join(cfg.dataset_dir, "HuTcellsCRISPRaPerturbSeqAllGene_Resting_with_metadata.h5ad")],
+            [os.path.join(cfg.dataset_dir, "set3_example_test.h5ad")],
             train=False,
         )
         self._dataset = ds
         self._cell_name = ds.cell_name
         self._perturb_all = ds.perturb_all
         
-        mtx2 = pd.read_csv(os.path.join(cfg.dataset_dir, "integrated_network_setting3_all_genes.csv"),header=0, index_col=0)
-        self._in_degree = mtx2.sum(axis=0)
-        self._out_degree = mtx2.sum(axis=1)
+        mtx = pd.read_csv(os.path.join(cfg.dataset_dir, "integrated_network_setting3_all_genes.csv"),header=0, index_col=0)
+        self._in_degree = mtx.sum(axis=0)
+        self._out_degree = mtx.sum(axis=1)
         
 
     def __getitem__(self, index):

@@ -16,7 +16,6 @@ from tabulate import tabulate
 
 from common import config as cfg
 from model.finetune_model import FinetuneModel as model_fn
-from data_provider.train_loader import TrainLoader
 from data_provider.validation_loader import ValidationLoader
 
 

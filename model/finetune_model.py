@@ -13,9 +13,6 @@ class FinetuneModel(BaseModel):
     def __init__(self):
         super(FinetuneModel, self).__init__()
         self.pretrain = PretrainModel(pretrain=False)
-        # for x in self.pretrain.parameters():
-        #     if x.requires_grad:
-        #         x.requires_grad = False
         inplane = self.pretrain.d_model
         self.d_model = 256
         self.embed_in_degree = nn.Sequential(
