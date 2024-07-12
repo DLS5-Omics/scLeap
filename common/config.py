@@ -52,7 +52,7 @@ class Config:
     @property
     @functools.lru_cache(maxsize=1)
     def dataset_dir(self):
-        path = Path(f"/home/yan/scLeap/dataset")
+        path = Path(f"/home/yan/ISPert/dataset_full")
         if path.exists():
             return path
         raise Exception("DatasetNotFoundError")
@@ -60,7 +60,7 @@ class Config:
     @property
     @ensure_dir
     def saved_dir(self):
-        return Path(f"/home/yan/scLeap/")
+        return Path(f"/home/yan/ISPert/dataset_full/")
 
     @property
     @functools.lru_cache(maxsize=1)
@@ -78,6 +78,11 @@ class Config:
     @functools.lru_cache(maxsize=1)
     def pretrain_model_dir(self):
         return self.saved_dir / "pretrain" / "model"
+    
+    @property
+    @functools.lru_cache(maxsize=1)
+    def checkpoint_dir(self):
+        return self.model_dir
 
 
 config = Config()
