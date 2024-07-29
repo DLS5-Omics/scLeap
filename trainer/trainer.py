@@ -163,7 +163,7 @@ class Trainer:
                 self.logger.info(f"Checkpoint '{filename}' (step {self.step}) loaded")
         else:
             pretrain_path = (
-                cfg.pretrain_model_dir / f"checkpoint-step-{cfg.pretrain_step}.pth"
+                cfg.pretrain_model_dir / f"pretrain_weights.pth"
             )
             if self.world_rank == 0:
                 self.logger.info(f"Loading pretrain checkpoint: {pretrain_path} ...")

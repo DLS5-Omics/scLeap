@@ -21,7 +21,6 @@ class Config:
         self.bins = np.linspace(0, 9.3, 65)
 
         # for training
-        self.pretrain_step = 1000000
         self.mixed_precision = True
         self.nr_step = 500
         self.warmup_step = 50
