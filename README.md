@@ -85,12 +85,14 @@ Please refer to `tutorials/tutorial.ipynb` for more detailed instructions.
 
 ## Citation   
 ```
-@article{wang2024directing,
-  title={Directing cellular transitions on gene graph-enhanced cell state manifold},
-  author={Wang, Tianze and Pan, Yan and Ju, Fusong and Zheng, Shuxin and Liu, Chang and Min, Yaosen and Liu, Xinwei and Xia, Huanhuan and Liu, Guoqing and Liu, Haiguang and others},
-  journal={bioRxiv},
-  pages={2024--10},
-  year={2024},
-  publisher={Cold Spring Harbor Laboratory}
+@article{wang2025cellnavi,
+  title={CellNavi predicts genes directing cellular transitions by learning a gene graph-enhanced cell state manifold},
+  author={Wang, Tianze and Pan, Yan and Ju, Fusong and Zheng, Shuxin and Liu, Chang and Min, Yaosen and Jiang, Qun and Liu, Xinwei and Xia, Huanhuan and Liu, Guoqing and others},
+  journal={Nature Cell Biology},
+  volume={27},
+  number={10},
+  pages={1863--1874},
+  year={2025},
+  publisher={Nature Publishing Group UK London}
 }
 ```
